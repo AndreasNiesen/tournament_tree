@@ -1,0 +1,249 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+    --controls_size: 50px;
+    --bg_color: greenyellow;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg_color);
+    overflow: hidden;
+}
+
+div.full_display {
+    display: flex;
+    width: 100%;
+    height: calc(100% - var(--controls_size));
+    flex-direction: column;
+
+    /* border: 2px solid black; */
+}
+
+div.pic_area {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 0.5rem;
+    height: 100%;
+    max-height: calc(50% - (var(--controls_size) / 2));
+
+    /* border: 2px solid black; */
+}
+
+div.pic_area > img {
+    display: grid;
+    justify-items: center;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    
+    /* border: 2px solid black; */
+}
+
+div.pic_area > p {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 2px 0px;
+}
+
+div.tree_area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    height: 100%;
+
+    /* border: 2px solid black; */
+}
+
+div.tree_round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    /* border: 2px solid black; */
+}
+
+div.round_matchup {
+    width: 100%;
+    height: 50px;
+
+    /* border: 2px solid black; */
+}
+
+div.matchup_player {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    width: 100%;
+    height: 50px;
+    font-size: 32px;
+
+    border: 2px solid black;
+}
+
+div.player_name {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-left: 0.5rem;
+
+    /* border: 2px solid black; */
+}
+
+div.player_votes {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-right: 0.5rem;
+    
+    /* border: 2px solid black; */
+}
+
+div.player_votes > p {
+    width: 100%;
+    text-align: right;
+}
+
+div.controls {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+    width: 100%;
+    height: var(--controls_size);
+
+    /* border: 2px solid black; */
+}
+
+div.controls > button {
+    width: 150px;
+    height: 30px;
+    margin: auto 0;
+}
+
+div.placement_area {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - var(--controls_size));
+    opacity: 0;
+    background: var(--bg_color);
+    align-items: center;
+
+    display: grid;
+    grid-template: 
+        ". a . d . g ." 2rem
+        ". b . e . h ." calc(50% - 4rem - 10px)
+        ". c . f . i ." 2rem
+        ". . . . . . ." 20px
+        ". j . . . m ." 2rem
+        ". k . . . n ." calc(50% - 4rem - 10px)
+        ". l . . . o ." 2rem / 1fr 30% 1fr 30% 1fr 30% 1fr;
+}
+
+div.placement_area.active {
+    pointer-events: unset;
+    opacity: 1;
+}
+
+div.placement_area.active.final {
+    grid-template:
+        ". . . . . . ." 10%
+        ". a . d . g ." 2rem
+        ". b . e . h ." calc(80% - 4rem)
+        ". c . f . i ." 2rem
+        ". . . . . . ." 10% / 1fr 30% 1fr 30% 1fr 30% 1fr;
+}
+
+div.placement_area > * {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    font-size: 1.5rem;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+div.placement_area > #fp_heading {
+    grid-area: a;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .first_place_img {
+    grid-area: b;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .first_place_name {
+    grid-area: c;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > #sp_heading {
+    grid-area: d;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .second_place_img {
+    grid-area: e;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .second_place_name {
+    grid-area: f;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > #tp_heading {
+    grid-area: g;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .third_place_img {
+    grid-area: h;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .third_place_name {
+    grid-area: i;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > #tfp_heading {
+    grid-area: j;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .thirdfourth_place_img {
+    grid-area: k;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .thirdfourth_place_name {
+    grid-area: l;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > #ftp_heading {
+    grid-area: m;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .fourththird_place_img {
+    grid-area: n;
+    /* border: 2px solid black; */
+}
+
+div.placement_area > .fourththird_place_name {
+    grid-area: o;
+    /* border: 2px solid black; */
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="static/script.js" type="module"></script>
+    <link rel="stylesheet" href="static/style.css">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="full_display">
+        <div class="pic_area">
+            <img src="" alt="" id="img_1">
+            <img src="" alt="" id="img_2">
+            <p id="name_1"></p>
+            <p id="name_2"></p>
+        </div>
+        <div class="tree_area">
+            {% for i in range(0, tournament_count) %}
+                <div class="tree_round" id="round_{{ i }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="controls">
+        <button id="controls_start_match">Match starten</button>
+        <button id="controls_end_match">Match beenden</button>
+    </div>
+    <div class="placement_area" id="placement_area">
+        <h1 id="fp_heading">1</h1>
+        <img src="" alt="" class="first_place_img" id="first_place_img">
+        <p class="first_place_name" id="first_place_name"></p>
+
+        <h1 id="sp_heading">2</h1>
+        <img src="" alt="" class="second_place_img" id="second_place_img">
+        <p class="second_place_name" id="second_place_name"></p>
+        
+        <h1 id="tp_heading">3</h1>
+        <img src="" alt="" class="third_place_img" id="third_place_img">
+        <p class="third_place_name" id="third_place_name"></p>
+        
+        <h1 id="tfp_heading">3|4</h1>
+        <img src="" alt="" class="thirdfourth_place_img" id="thirdfourth_place_img">
+        <p class="thirdfourth_place_name" id="thirdfourth_place_name"></p>
+
+        <h1 id="ftp_heading">3|4</h1>
+        <img src="" alt="" class="fourththird_place_img" id="fourththird_place_img">
+        <p class="fourththird_place_name" id="fourththird_place_name"></p>
+    </div>
+</body>
+</html>

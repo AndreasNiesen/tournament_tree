@@ -1,0 +1,16 @@
+OnNextMatch -> Bot sendet an Chat "A vs B, Befehle !vote A vs !vote B"
+
+"Kampfstrahl"
+Name vs Name
+
+kampf history/kampf stat (persistent)
+
+!match x y (round, match) um match nachzuvollziehen
+(anzeige Runde x Match y)
+
+----------------------------------------------------------------
+
+Timer/Countdown anzeigen
+Auto-Match-Ende
+(Evtl Auto Match ende)
+
