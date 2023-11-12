@@ -1,0 +1,84 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+    --controls_size: 50px;
+    --countdown_size: 50px;
+    --bg_color: greenyellow;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg_color);
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.countdown {
+    height: var(--countdown_size);
+    
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+}
+
+.controls {
+    height: var(--controls_size);
+    
+    display: grid;
+    place-items: center;
+}
+
+#arena {
+    overflow: hidden;
+    width: 100%;
+    height: calc(100% - var(--controls_size) - var(--countdown_size));
+    background: var(--bg_color);
+    display: grid;
+    grid-template:
+        ". . . . ." 10%
+        ". a . d ." 2rem
+        ". b . e ." calc(80% - 4rem)
+        ". c . f ." 2rem
+        ". . . . ." 10% / 1fr 40% 1fr 40% 1fr;
+}
+
+#arena > * {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    font-size: 1.5rem;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+#arena > .vote_instruction:first-child {
+    grid-area: a;
+}
+
+#arena > .pic1 {
+    grid-area: b;
+}
+
+#arena > .name1 {
+    grid-area: c;
+}
+
+#arena > .vote_instruction {
+    grid-area: d;
+}
+
+#arena > .pic2 {
+    grid-area: e;
+}
+
+#arena > .name2 {
+    grid-area: f;
+}

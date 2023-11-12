@@ -1,6 +1,8 @@
 from flask import Flask, render_template, send_file
 from bot import twitch_bot
 from threading import Thread
+import random
+import json
 import math
 import os
 
@@ -15,14 +17,43 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def tournament_tree():
+def combo():
     print(cur_tournament_runden)
-    return render_template("index.html", tournament_count=cur_tournament_runden)
+    return render_template("combo_index.html", tournament_count=cur_tournament_runden)
+
+
+@app.route("/tree_only/")
+def tourney_tree():
+    print(cur_tournament_runden)
+    return render_template("tourney_tree_index.html", tournament_count=cur_tournament_runden)
+
+
+@app.route("/pics_only/")
+def pics_1v1():
+    return render_template("pic_1v1.html")
 
 
 @app.route("/votes/")
 def get_votes():
     return twitch.votes
+
+
+@app.route("/prev_votes/")
+def get_prev_votes():
+    return twitch.prev_votes
+
+
+@app.route("/match_running/")
+def is_match_running():
+    return { "match_running": twitch.match_running }
+
+
+@app.route("/matchup_players/")
+def get_matchup_players():
+    return {
+            "1": list(twitch.votes.keys())[0],
+            "2": list(twitch.votes.keys())[1]
+        }
 
 
 @app.route("/reload/")
@@ -40,12 +71,19 @@ def do_reload():
 
 @app.route("/get_tournament_data/")
 def get_tournament_data():
-    return cur_tournament
+    print(json.dumps(cur_tournament))
+    return json.dumps(cur_tournament)
 
 
 @app.route("/start_match/<string:name1>/<string:name2>")
 def start_match(name1, name2):
     twitch.OnMatchStart([name1, name2])
+    return "1"
+
+
+@app.route("/prepare_match/<string:name1>/<string:name2>")
+def prepare_match(name1, name2):
+    twitch.OnPrepareMatch([name1, name2])
     return "1"
 
 
@@ -65,6 +103,36 @@ def get_pics(pic_name):
         return "Bad Path"
     
     return send_file(path, mimetype=f"image/{path.split('.')[-1]}")
+
+
+def is_randomization_okay(arr):
+    for i in range(0, len(arr), 2):
+        print(i)
+        print(arr[i])
+        print(arr[i+1])
+        if arr[i].startswith("gamesbar_gaming_") and arr[i+1].startswith("gamesbar_gaming_"):
+            return False
+        
+    return True
+
+
+def randomize_order():
+    global cur_tournament
+    keys = list(cur_tournament.keys())
+    
+    while True:
+        random.shuffle(keys)
+
+        if (is_randomization_okay(keys)):
+            break
+
+        print("re-randomizing")
+
+    buff = {}
+    for k in keys:
+        buff[k] = cur_tournament[k]
+    
+    cur_tournament = buff
 
 
 def load_tournament(path="./content"):
@@ -120,26 +188,28 @@ def load_tournament(path="./content"):
 
     to_create = fill_to - teilnehmer_zahl
     while to_create > 0:
+        print("adding to cur_tourna")
         cur_tournament[f"gamesbar_gaming_{to_create}"] = ""
         to_create -= 1
 
     cur_tournament_runden = math.ceil(math.log(teilnehmer_zahl, 2))
     # print(f"Anzahl Runden: {cur_tournament_runden}")
-
+    # randomize_order()
+    # print("Reihenfolge:")
     # print(cur_tournament)
 
 
+if __name__ == "__main__":
+    load_tournament()
 
-load_tournament()
+    twitch_thread = Thread(target=twitch.OnStart)
+    twitch_thread.start()
 
-twitch_thread = Thread(target=twitch.OnStart)
-twitch_thread.start()
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.run(debug=False, use_reloader=False)
 
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.run(debug=False, use_reloader=False)
+    print("Stopping Twitch bot...")
+    twitch.run = False
+    print("Twitch Bot stopped.")
 
-print("Stopping Twitch bot...")
-twitch.run = False
-print("Twitch Bot stopped.")
-
-twitch_thread.join()
+    twitch_thread.join()

@@ -97,6 +97,13 @@ div.player_name {
     /* border: 2px solid black; */
 }
 
+div.player_name > p {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 div.player_votes {
     display: flex;
     align-items: center;

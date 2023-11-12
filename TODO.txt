@@ -14,3 +14,4 @@ Timer/Countdown anzeigen
 Auto-Match-Ende
 (Evtl Auto Match ende)
 
+Vote-Delay (an stream-delay angepasst)

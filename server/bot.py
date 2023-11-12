@@ -21,6 +21,8 @@ class twitch_bot:
 
         self.match_running = False
 
+        self.messages = []
+
 
     def OnStart(self):
         print("OnStart")
@@ -36,6 +38,13 @@ class twitch_bot:
 
             while self.run:
                 try:
+                    for i in range(5):
+                        if len(self.messages) == 0:
+                            break
+
+                        self.send_msg(s, self.messages.pop(0))
+
+
                     buffer = buffer + s.recv(1024).decode("utf-8")
                     if len(buffer) == 0:
                         print("disconnected..")
@@ -65,6 +74,7 @@ class twitch_bot:
                                         message = ""
 
                                     username  = parts[1].split("!")[0]
+                                    if (username.lower() == settings.user.lower()): return
 
                                     if (MODT): print(message)
 
@@ -92,7 +102,7 @@ class twitch_bot:
                                                     self.votes[vote_for] = 0
 
                                             case "!quit":
-                                                print(f"Execution stopped by {username}")
+                                                print(f"{username} tried to stop the execution")
                                                 # self.run = False
                                     elif MODT and len(message) == 1:
                                         try:
@@ -102,7 +112,7 @@ class twitch_bot:
 
                                                 if vote_by not in self.users_voted:
                                                     if len(self.votes.keys()) < i + 1 or i < 0:
-                                                        s.send(f"PRIVMSG {self.CHANNEL} :'{vote_for}' ist keine gültige Auswahl!\n".encode("utf-8"))
+                                                        self.send_whsp(s, username, f"'{i + 1}' ist keine gültige Auswahl!")
                                                     else:
                                                         self.votes[list(self.votes.keys())[i]] += 1
                                                         self.users_voted.append(vote_by)
@@ -113,12 +123,35 @@ class twitch_bot:
                                         if "End of /NAMES list" in stuff:
                                             MODT = True
                                             print("Connected!")
+                                            self.send_msg(s, "Gamesbar_Bot is in da House!")
 
                     time.sleep(0.1)
                 except TimeoutError:
                     continue
 
+    
+    def send_msg(self, sock, msg):
+        print("PRIVMSG {} :{}\n".format(settings.channel, msg).encode("utf-8"))
+        sock.send("PRIVMSG {} :{}\n".format(settings.channel, msg).encode("utf-8"))
+
+
+    def send_whsp(self, sock, username, msg):
+        print("PRIVMSG {} :/w {} {}\n".format(settings.channel, username, msg).encode("utf-8"))
+        sock.send("PRIVMSG {} :/w {} {}\n".format(settings.channel, username, msg).encode("utf-8"))
+
+
+    def OnPrepareMatch(self, matchup):
+        self.users_voted = []
+        self.prev_votes = self.votes
         
+        self.votes = {
+            matchup[0]: 0,
+            matchup[1]: 0
+        }
+
+        print(f"DEBUG: Match zwischen \"{matchup[0]}\" und \"{matchup[1]}\" ist vorbereitet.")
+
+
     def OnMatchStart(self, matchup):
         self.users_voted = []
         self.prev_votes = self.votes
@@ -130,14 +163,19 @@ class twitch_bot:
 
         self.match_running = True
 
-        print(f"Match zwischen \"{matchup[0]}\" and \"{matchup[1]}\" gestartet.")
+        print(f"DEBUG: Match zwischen \"{matchup[0]}\" (1) und \"{matchup[1]}\" (2) gestartet.")
+        self.messages.append(f"Match zwischen \"{matchup[0]}\" (1) und \"{matchup[1]}\" (2) gestartet.")
 
     
     def OnMatchStop(self):
         self.match_running = False
 
-        print(f"Match zwischen \"{list(self.votes.keys())[0]}\" and \"{list(self.votes.keys())[1]}\" beendet.")
+        u1 = list(self.votes.keys())[0]
+        u2 = list(self.votes.keys())[1]
+
+        print(f"Match zwischen \"{u1}\" and \"{u2}\" beendet.")
         print(self.votes)
+        self.messages.append(f"Match zwischen \"{u1}\" ({self.votes[u1]} Votes) und \"{u2}\" ({self.votes[u2]} Votes) beendet.")
 
 
 if __name__ == "__main__":

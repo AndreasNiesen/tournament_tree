@@ -274,7 +274,8 @@ async function main() {
     
     PICS = json_resp;
 
-    ROUNDS[0] = shuffle_array(Object.keys(json_resp));
+    //ROUNDS[0] = shuffle_array(Object.keys(json_resp));
+    ROUNDS[0] = Object.keys(json_resp);
     
     MAX_ROUNDS = Math.log2(ROUNDS[0].length);
 
