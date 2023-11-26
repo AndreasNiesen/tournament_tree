@@ -43,11 +43,11 @@ async function start_match() {
     let n1 = cur_n1 = json_resp["1"];
     let n2 = cur_n2 = json_resp["2"];
 
-    let p1 = PICS[n1];
-    let p2 = PICS[n2];
+    let p1 = PICS[n1][0];
+    let p2 = PICS[n2][0];
 
-    pic1.src = `/pics/${p1}`;
-    pic2.src = `/pics/${p2}`;
+    pic1.src = `/pics/${n1}/${p1}`;
+    pic2.src = `/pics/${n2}/${p2}`;
 
     name1.innerText = n1;
     name2.innerText = n2;

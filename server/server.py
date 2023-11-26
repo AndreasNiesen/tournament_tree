@@ -93,9 +93,15 @@ def stop_match():
     return "1"
 
 
+@app.route("/pics/<string:insta_name>/<string:pic_name>")
 @app.route("/pics/<string:pic_name>")
-def get_pics(pic_name):
-    path = "content\\" + pic_name
+def get_pics(pic_name, insta_name=""):
+    path = ""
+    
+    if (insta_name != ""):
+        path = "content\\" + insta_name + "\\" + pic_name
+    else:
+        path = path = "content\\" + pic_name
 
     valid_path = os.path.exists(path) and os.path.isfile(path)
     
@@ -140,7 +146,8 @@ def load_tournament(path="./content"):
     global cur_tournament
 
     path = path.rstrip("/") + "/"
-    info_txt = path + "info.csv"
+    ########## CSV iteration
+    # info_txt = path + "info.csv"
     
     # # info_txt => InstaName;BildDatei
     # with open(info_txt, "r", encoding="utf-8") as infos:
@@ -155,27 +162,46 @@ def load_tournament(path="./content"):
     #         c += 1
 
     #         if c >= MAX_TEILNEHMER:
-    #             print("Maximal mögliche Teilnehmerzahl überschritten, daher wird niemand mehr hinzugefügt.")
+    #             print("Maximal mögliche Teilnehmerzahl erreicht, daher wird niemand mehr hinzugefügt.")
     #             break
 
+    ########## Pic per Instauser iteration
+    # c = 0
+    # print(os.listdir(path))
+    # for file in os.listdir(path):
+    #     parts = file.split(".")
+    #     if parts[-1].lower() in ACCEPTED_PIC_FORMATS:
+    #         pic = file.strip()
+    #         insta = ".".join(parts[:-1]).strip()
+
+    #         if insta not in cur_tournament.keys():
+    #             cur_tournament[insta] = pic
+    #         else:
+    #             print(f"WARNUNG: Der Instagramname '{insta}' ist mehrfach in der Liste vorhanden.")
+
+    #         c += 1
+
+    #         if c >= MAX_TEILNEHMER:
+    #             print("Maximal mögliche Teilnehmerzahl erreicht, daher wird niemand mehr hinzugefügt.")
+    #             break
+
+    ########## Insteruser-Folder mit ein oder mehreren Pics
     c = 0
-    print(os.listdir(path))
-    for file in os.listdir(path):
-        parts = file.split(".")
-        if parts[-1].lower() in ACCEPTED_PIC_FORMATS:
-            pic = file.strip()
-            insta = ".".join(parts[:-1]).strip()
+    for folder in [p for p in os.listdir(path) if os.path.isdir(path + p) and not p.startswith(".")]:
+        if folder not in cur_tournament.keys():
+            cur_tournament[folder] = []
+        else:
+            print(f"WARNUNG: Der Instagramname '{folder}' ist mehrfach in der Liste vorhanden.")
 
-            if insta not in cur_tournament.keys():
-                cur_tournament[insta] = pic
-            else:
-                print(f"WARNUNG: Der Instagramname '{insta}' ist mehrfach in der Liste vorhanden.")
+        for file in [f for f in os.listdir(path + folder) if os.path.isfile(path + folder + "/" + f)]:
+            if file.split(".")[-1].lower() in ACCEPTED_PIC_FORMATS:
+                cur_tournament[folder].append(file)
 
-            c += 1
+        c += 1
 
-            if c >= MAX_TEILNEHMER:
-                print("Maximal mögliche Teilnehmerzahl überschritten, daher wird niemand mehr hinzugefügt.")
-                break
+        if c >= MAX_TEILNEHMER:
+            print("Maximal mögliche Teilnehmerzahl erreicht, daher wird niemand mehr hinzugefügt.")
+            break
 
 
     teilnehmer_zahl = len(cur_tournament.keys())
@@ -189,7 +215,7 @@ def load_tournament(path="./content"):
     to_create = fill_to - teilnehmer_zahl
     while to_create > 0:
         print("adding to cur_tourna")
-        cur_tournament[f"gamesbar_gaming_{to_create}"] = ""
+        cur_tournament[f"gamesbar_gaming_{to_create}"] = []
         to_create -= 1
 
     cur_tournament_runden = math.ceil(math.log(teilnehmer_zahl, 2))

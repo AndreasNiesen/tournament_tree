@@ -188,13 +188,13 @@ document.getElementById("controls_end_match").addEventListener("click", async e 
         if (CURRENT_ROUND > MAX_ROUNDS_INDEX) {
             FINAL_MATCH_DONE = true;
             
-            document.getElementById("first_place_img").src = `/pics/${PICS[FIRST_PLACE]}`;
-            document.getElementById("second_place_img").src = `/pics/${PICS[SECOND_PLACE]}`;
-            document.getElementById("third_place_img").src = `/pics/${PICS[THIRD_PLACE]}`;
+            document.getElementById("first_place_img").src = `/pics/${FIRST_PLACE}/${PICS[FIRST_PLACE][0]}`;
+            document.getElementById("second_place_img").src = `/pics/${SECOND_PLACE}/${PICS[SECOND_PLACE][0]}`;
+            document.getElementById("third_place_img").src = `/pics/${THIRD_PLACE}/${PICS[THIRD_PLACE][0]}`;
 
-            document.getElementById("first_place_name").src = `/pics/${FIRST_PLACE}`;
-            document.getElementById("second_place_name").src = `/pics/${SECOND_PLACE}`;
-            document.getElementById("third_place_name").src = `/pics/${THIRD_PLACE}`;
+            document.getElementById("first_place_name").innerText = FIRST_PLACE;
+            document.getElementById("second_place_name").innerText = SECOND_PLACE;
+            document.getElementById("third_place_name").innerText = THIRD_PLACE;
 
             document.getElementById("final_podest").classList.add("active");
 
